@@ -68,8 +68,8 @@ class LoginScreen:
             # Lendo a senha do usuario
             cursor.execute("SELECT password FROM users WHERE login = ?", (username,))
             senha = cursor.fetchone()
-            print("Senha no banco: ", senha[0])
-            print("Senha digitado: ", password)
+            # print("Senha no banco: ", senha[0])
+            # print("Senha digitado: ", password)
 
         except Exception as e:
             messagebox.showerror("Erro", f"Problema no banco de dados: {e}")

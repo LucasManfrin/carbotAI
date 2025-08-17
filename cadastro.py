@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
+import sqlite3
 
 class CadastroScreen:
     def __init__(self):
@@ -47,15 +48,31 @@ class CadastroScreen:
         nome = self.nome_entry.get()
         senha = self.senha_entry.get()
         confirmar_senha = self.confirmar_senha_entry.get()
-        
-        # Exemplo de validação simples (você pode expandir)
-        if nome and senha and confirmar_senha:
-            if senha == confirmar_senha:
-                messagebox.showinfo("Sucesso", f"Cadastro realizado para: {nome}")
+
+        # Conexao com o banco
+        try:
+            conexao = sqlite3.connect("carros.db")
+            cursor = conexao.cursor()
+            # Validacao de cadastro
+            if nome and senha and confirmar_senha:
+                if senha == confirmar_senha:
+                    cursor.execute("INSERT INTO users (login, password) VALUES (?, ?)", (nome, senha))
+                    conexao.commit()
+                    print("Usuario adicionado: ", nome)
+                    print("Senha adicionada:", senha)
+                    messagebox.showinfo("Sucesso", f"Cadastro realizado para: {nome}")
+                else:
+                    messagebox.showerror("Erro", "Senhas não coincidem!")
+                
             else:
-                messagebox.showerror("Erro", "As senhas não coincidem!")
-        else:
-            messagebox.showerror("Erro", "Preencha todos os campos!")
+                messagebox.showerror("Erro", "Preencha todos os campos!")
+
+        except Exception as e:
+            messagebox.showerror("Erro", f"Problema no banco de dados: {e}")    
+
+        finally:
+            conexao.close()
+        
     
     def run(self):
         self.root.mainloop()
