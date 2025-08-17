@@ -1,8 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 import sqlite3
-
-
+from cadastro import CadastroScreen
 
 
 class LoginScreen:
@@ -51,6 +50,22 @@ class LoginScreen:
             command=self.on_login_click
         )
         login_button.pack(fill='x', pady=5)
+
+        cadastro = tk.Button(
+            main_frame, 
+            text="NÃO POSSUI LOGIN? CLIQUE AQUI!", 
+            font=("Arial", 12, "bold"),
+            bg="#4CAF59",
+            fg="white",
+            cursor="hand2",
+            command=self.ir_para_cadastro
+        )
+        cadastro.pack(fill='x', pady=5)
+
+    def ir_para_cadastro(self):
+        """Função chamada quando clica no botão entrar"""
+        self.root.destroy() # Fecha a tela de login
+        CadastroScreen() # Abre a tela de cadastro
         
     def on_login_click(self):
         """Função chamada quando clica no botão entrar"""
@@ -86,9 +101,7 @@ class LoginScreen:
         else:
             messagebox.showerror("Erro", "Usuário não encontrado!")
 
-        
-
-            
+ 
         
     def run(self):
         """Inicia a aplicação"""

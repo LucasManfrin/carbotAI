@@ -2,12 +2,13 @@ import tkinter as tk
 from tkinter import messagebox
 import sqlite3
 
+
 class CadastroScreen:
     def __init__(self):
         # Criar janela principal
         self.root = tk.Tk()
         self.root.title("CADASTRO")
-        self.root.geometry("500x300")
+        self.root.geometry("500x400")
         self.root.configure(bg='white')
         self.root.resizable(False, False)
         
@@ -42,6 +43,17 @@ class CadastroScreen:
                                 bg='#4CAF50', fg='white', width=20, height=1,
                                 command=self.on_cadastrar_click)
         cadastrar_btn.pack(pady=20)
+
+        # Botao Voltar
+        voltar_btn = tk.Button(self.root, text="VOLTAR", font=("Arial", 12, "bold"),
+                                bg='#4CAF50', fg='white', width=20, height=1,
+                                command=self.on_voltar_click)
+        voltar_btn.pack(pady=5)
+
+    def on_voltar_click(self):
+        self.root.destroy()
+        from login import LoginScreen
+        LoginScreen()
     
     def on_cadastrar_click(self):
         # Aqui você adicionará a lógica de cadastro
