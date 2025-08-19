@@ -69,6 +69,7 @@ class LoginScreen:
         
     def on_login_click(self):
         """Função chamada quando clica no botão entrar"""
+        global username
         username = self.username_entry.get()
         password = self.password_entry.get()
         
@@ -95,7 +96,9 @@ class LoginScreen:
         # Validacao de Login
         if senha:
             if str(senha[0]).strip() == str(password).strip():
-                messagebox.showinfo("Sucesso", "Login realizado com sucesso!")
+                from chatbot import ChatbotGUI
+                self.root.destroy()
+                ChatbotGUI()
             else:
                 messagebox.showerror("Erro", "Senha incorreta!")
         else:
