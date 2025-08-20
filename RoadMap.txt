@@ -1,0 +1,13 @@
+Tópicos para se estudar no projeto:
+1. O que são variáveis de ambiente e como usá-las em seu projeto. (Foi apontado para proteger a api_key) (.env?)
+2. Pesquisar o termo "hardcode".
+3. Estudar sobre gitignore e configurar para meu projeto.
+4. requirements.txt - "Estude pra que serve esse arquivo no contexto do Python. Entenda a importância do gerenciamento correto de dependências e o papel do requirements.txt nesse cenário. Em seguida, implemente ele no seu projeto"
+
+
+Tópicos secundários:
+- Separação de camadas: MVC
+- ⁠O que é service layer e a importância dela pra lógica de negócio
+- ⁠Usar ferramenta de logging ao invés de print()
+- ⁠O que são constants, pq elas são úteis e quando usar elas ao invés de trabalhar com valores hardcoded
+- ⁠Comece a olhar com carinho pra testes unitários. Entenda o que são e como eles ajudam a proteger seu código de mudanças indevidas no futuro.

@@ -3,11 +3,17 @@ from tkinter import scrolledtext, messagebox
 from google import genai
 from google.genai import types
 from login import username
+from dotenv import load_dotenv
+import os
+   
+load_dotenv()
+api_key = os.getenv('gemini_api_key')
+
 
 class ChatbotGUI:
     def __init__(self):
         # Configurar cliente da API
-        self.client = genai.Client(api_key="AIzaSyCvEIte4FtXnx5sHMDwXBmDCaum4WkSdW4")
+        self.client = genai.Client(api_key)
         self.lista_msgs = []
         
         # Criar janela principal
@@ -94,7 +100,7 @@ class ChatbotGUI:
             model="gemini-2.5-flash", 
             contents=msg,
             config=types.GenerateContentConfig(
-                system_instruction="Você é um assistente, especialista e entusiasta de carros, com uma paixão especial por carros esportivos. Seu papel é ajudar o usuário a encontrar o carro ideal, focado nos objetivos dele. Seu tom é objetivo, mas não sério, usando uma linguagem um pouco mais informal e entusiasmada. Siga estas instruções rigorosamente para manter as respostas curtas e úteis: Forneça no máximo 5 sugestões de carros por pergunta, Para cada carro sugerido, use uma lista de pontos para descrever brevemente: 'Por que é incrível' e 'O que observar', Mantenha cada ponto com no máximo duas frases curtas e Inclua uma conclusão de no máximo duas frases."
+                system_instruction="Você é um assistente, especialista e entusiasta de carros, com uma paixão especial por carros esportivos. Seu papel é ajudar o usuário a encontrar o carro ideal, focado nos objetivos dele. Seu tom é objetivo, mas não sério, usando uma linguagem um pouco mais informal e entusiasmada. Siga estas instruções rigorosamente para manter as respostas curtas e úteis: Forneça no máximo 5 sugestões de carros por pergunta, Para cada carro sugerido, use uma lista de pontos para descrever brevemente: 'Por que é incrível' e 'O que observar', Mantenha cada ponto com no máximo duas frases curtas e Inclua uma conclusão de no máximo duas frases.!"
             )
         )
         

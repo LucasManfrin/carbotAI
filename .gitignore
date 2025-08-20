@@ -1,0 +1,5 @@
+# Ignorando a pasta pychache
+/__pychache__
+
+# Ignorando o arquivo de variaveis de ambiente 
+.env
