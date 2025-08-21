@@ -1,5 +1,8 @@
 # Ignorando a pasta pychache
-/__pychache__
+__pycache__/cadastro.cpython-311.pyc
+__pycache__/chatbot.cpython-311.pyc
+__pycache__/login.cpython-311.pyc
+
 
 # Ignorando o arquivo de variaveis de ambiente 
 .env

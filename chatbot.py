@@ -7,13 +7,12 @@ from dotenv import load_dotenv
 import os
    
 load_dotenv()
-api_key = os.getenv('gemini_api_key')
+api_key = os.getenv('GEMINI_API_KEY')
 
+client = genai.Client()
 
 class ChatbotGUI:
     def __init__(self):
-        # Configurar cliente da API
-        self.client = genai.Client(api_key)
         self.lista_msgs = []
         
         # Criar janela principal
@@ -96,7 +95,7 @@ class ChatbotGUI:
     def enviar_msg_api(self, msg):
         self.lista_msgs.append({"role": "user", "content": msg})
         
-        resposta = self.client.models.generate_content(
+        resposta = client.models.generate_content(
             model="gemini-2.5-flash", 
             contents=msg,
             config=types.GenerateContentConfig(
