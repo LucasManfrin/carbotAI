@@ -1,7 +1,4 @@
 ## Introdução
-![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)  
-![CRUD](https://img.shields.io/badge/CRUD-Database-green?style=for-the-badge)  
-![Google Gemini](https://img.shields.io/badge/Google%20Gemini-4285F4?style=for-the-badge&logo=google&logoColor=white)  
 A fins de estudos, estou desenvolvendo um **CRUD + Chatbot em Python**.  
 A ideia é permitir a interação via chat para que o próprio chatbot realize as tarefas de **cadastro** e **exclusão de carros** no banco de dados.  
 
