@@ -11,3 +11,5 @@ __pycache__/login.cpython-311.pyc
 *.db
 *.sqbpro
 
+# Ignorando a RoadMap 
+RoadMap.txt

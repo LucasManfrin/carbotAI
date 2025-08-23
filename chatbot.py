@@ -19,7 +19,6 @@ class ChatbotGUI:
         
         self.iniciar_db()
 
-        # Criar janela principal
         self.root = tk.Tk()
         self.root.title("Chatbot de Carros")
         self.root.state("zoomed")
@@ -28,12 +27,11 @@ class ChatbotGUI:
         self.criar_interface()
     
     def criar_interface(self):
-        # Título
         titulo = tk.Label(self.root, text="🚗 CHATBOT DE CARROS", 
                          font=('Arial', 16, 'bold'), bg='white')
         titulo.pack(pady=10)
         
-        # Área de conversa (histórico)
+        # Área de conversa
         self.area_conversa = scrolledtext.ScrolledText(
             self.root, 
             width=140, 
@@ -44,11 +42,9 @@ class ChatbotGUI:
         )
         self.area_conversa.pack(padx=20, pady=10)
         
-        # Frame para entrada e botão
         frame_entrada = tk.Frame(self.root, bg='white')
         frame_entrada.pack(fill='x', padx=20, pady=10)
-        
-        # Campo de entrada
+
         self.entrada_msg = tk.Entry(
             frame_entrada, 
             font=('Arial', 12),
@@ -56,8 +52,7 @@ class ChatbotGUI:
             width=50
         )
         self.entrada_msg.pack(side='left', fill='x', expand=True)
-        
-        # Botão enviar
+
         botao_enviar = tk.Button(
             frame_entrada,
             text="ENVIAR",
@@ -71,19 +66,13 @@ class ChatbotGUI:
         
         # Permitir enviar com Enter
         self.entrada_msg.bind('<Return>', lambda event: self.enviar_mensagem())
-        
-        # Mensagem inicial
+
         self.adicionar_mensagem(f"Bot", f"Olá {username}! Sou seu assistente especialista em carros! Como posso te ajudar hoje?")
     
     def enviar_mensagem(self):
         mensagem = self.entrada_msg.get().strip()
-        
+
         if not mensagem:
-            return
-        
-        if mensagem.lower() == "sair":
-            logging.info("Saindo...")
-            self.root.quit()
             return
         
         self.adicionar_mensagem("Você", mensagem)
@@ -96,7 +85,6 @@ class ChatbotGUI:
             
             # Tentar encontrar e isolar o JSON na resposta do bot
             try:
-                # Procura o início e o fim do bloco JSON
                 inicio_json = resposta.text.find('{')
                 fim_json = resposta.text.rfind('}') + 1
                 
@@ -140,6 +128,13 @@ class ChatbotGUI:
                                 resposta_bot = "Desculpe, não consegui identificar o nome do carro para deletar."
                         else:
                             resposta_bot = "Formato de dados inválido para a ação de deletar carro."
+                    elif acao == 'finalizar_chat':
+                        resposta_bot = "Até logo!"
+                        self.adicionar_mensagem("Bot", resposta_bot)
+                        logging.info(f"Acao: finalizar a aplicacao")
+                        self.root.after(2000, self.finalizar_chat)
+                        return
+                    
                     
                     else:
                         logging.warning(f"Ação não reconhecida: '{acao}'")
@@ -162,7 +157,10 @@ class ChatbotGUI:
             self.adicionar_mensagem("Bot", f"Erro: {str(e)}")
     
     def enviar_msg_api(self, msg):
-        self.lista_msgs.append({"role": "user", "content": msg})
+        self.lista_msgs.append({
+        "role": "user",
+        "parts": [{"text": msg}]
+    })
 
         # Instrucao para o chatbot
         instruction = (
@@ -172,19 +170,31 @@ class ChatbotGUI:
     "2. Se o usuário pedir para 'salvar', 'adicionar' ou 'guardar' um carro, responda APENAS com um JSON contendo a 'acao' e os 'dados' para a operação. Não inclua texto livre. O JSON deve ter o seguinte formato: {'acao': 'salvar_carro', 'dados': {'model': 'Nome do Carro', 'cv': 'Potencia do Carro', 'mark': 'Marca do Carro', 'price': 'Preco do Carro'}}."
     "3. Se o usuário pedir para 'ver' ou 'listar' os carros salvos, responda APENAS com um JSON no formato: {'acao': 'listar_carros'}."
     "4. Se o usuário pedir para 'deletar' um carro, responda APENAS com um JSON no formato: {'acao': 'deletar_carro', 'dados': {'model': 'Nome do Carro'}}."
+    "5. Se o usuário pedir para 'sair', ou quiser encerrar o chat, responda APENAS com um JSON no formato: {'acao': 'finalizar_chat'}"
     "Sempre extraia o nome do modelo do carro da mensagem do usuário e preencha o campo 'model' no JSON."
 
         )
         
+        lista_msg_formatada = [
+            {"role": message["role"], "parts": message["parts"]}
+            for message in self.lista_msgs
+        ]
+
         resposta = client.models.generate_content(
-            model="gemini-2.5-flash", 
-            contents=msg,
+            model="gemini-2.5-flash",
+            contents=lista_msg_formatada,
             config=types.GenerateContentConfig(
-                system_instruction= instruction
+                system_instruction=instruction
             )
         )
-        
-        self.lista_msgs.append(resposta)
+
+        resposta_texto = resposta.candidates[0].content.parts[0].text
+
+        self.lista_msgs.append({
+            "role": "model",
+            "parts": [{"text": resposta_texto}]
+        })
+
         return resposta
     
     def iniciar_db(self):
@@ -195,7 +205,6 @@ class ChatbotGUI:
 
     def salvar_carro_db(self, model, cv, mark, price):
         # Salva o carro no banco de dados
-        # Falta salvar o restante das coisas cd, mark, price
         try:
             self.cursor.execute("INSERT INTO cars (model, cv, mark, price) VALUES (?, ?, ?, ?)", (model, cv, mark, price,))
             self.conexao.commit()
@@ -225,6 +234,11 @@ class ChatbotGUI:
             return f"O carro '{model}' foi deletado da sua lista."
         else:
             return f"Não encontrei o carro '{model}' na sua lista."
+        
+    def finalizar_chat(self):
+        # Finalizar o chat
+        self.root.destroy()
+        logging.info("Fechando a Aplicacao")
     
     def adicionar_mensagem(self, remetente, mensagem):
         self.area_conversa.config(state='normal')
