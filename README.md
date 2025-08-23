@@ -15,9 +15,11 @@ Assim nasceu o **CarbotAI**, um projeto divertido e desafiador, que torna o apre
 - **Python**
 - **SQL**
 - **CRUD (Create, Read, Update, Delete)**  
-- **Google Gemini API**
 
 ---
+
+## Serviços / Ferramentas
+- **Google Gemini API** (integração com IA para interações no chatbot)  
 
 ## Objetivo
 - Praticar conceitos de **lógica de programação**, **manipulação de dados** e **interação com usuário**.  
