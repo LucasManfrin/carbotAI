@@ -1,9 +1,14 @@
 import tkinter as tk
 from tkinter import messagebox
-import sqlite3
+import sqlite3, logging
+from login import LoginScreen
 
+
+
+logging.basicConfig(level=logging.DEBUG, format="- %(filename)s - %(levelname)s - %(message)s")
 
 class CadastroScreen:
+    
     def __init__(self):
         # Criar janela principal
         self.root = tk.Tk()
@@ -52,7 +57,6 @@ class CadastroScreen:
 
     def on_voltar_click(self):
         self.root.destroy()
-        from login import LoginScreen
         LoginScreen()
     
     def on_cadastrar_click(self):
@@ -65,19 +69,29 @@ class CadastroScreen:
         try:
             conexao = sqlite3.connect("carros.db")
             cursor = conexao.cursor()
-            # Validacao de cadastro
-            if nome and senha and confirmar_senha:
-                if senha == confirmar_senha:
-                    cursor.execute("INSERT INTO users (login, password) VALUES (?, ?)", (nome, senha))
-                    conexao.commit()
-                    print("Usuario adicionado: ", nome)
-                    print("Senha adicionada:", senha)
-                    messagebox.showinfo("Sucesso", f"Cadastro realizado para: {nome}")
-                else:
-                    messagebox.showerror("Erro", "Senhas não coincidem!")
-                
+
+            # Validacao se o usuario existe
+            cursor.execute("SELECT id FROM users WHERE login = ?", (nome,))
+            usuario_existe = cursor.fetchone()
+
+            if usuario_existe:
+                # Se o fetchone() retornar algo, o usuario existe
+                messagebox.showinfo("Erro", "Este usuario ja esta cadastrado.")
             else:
-                messagebox.showerror("Erro", "Preencha todos os campos!")
+                if nome and senha and confirmar_senha:
+                    if senha == confirmar_senha:
+                        cursor.execute("INSERT INTO users (login, password) VALUES (?, ?)", (nome, senha))
+                        conexao.commit()
+                        logging.debug(f"Usuario adicionado: {nome}")
+                        logging.debug(f"Senha adicionada: {senha}")
+                        messagebox.showinfo("Sucesso", f"Cadastro realizado para: {nome}")
+                        self.root.destroy()
+                        LoginScreen()
+                    else:
+                        messagebox.showerror("Erro", "Senhas não coincidem!")
+                    
+                else:
+                    messagebox.showerror("Erro", "Preencha todos os campos!")
 
         except Exception as e:
             messagebox.showerror("Erro", f"Problema no banco de dados: {e}")    

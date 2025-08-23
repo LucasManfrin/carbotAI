@@ -1,7 +1,9 @@
 import tkinter as tk
 from tkinter import messagebox
 import sqlite3
-from cadastro import CadastroScreen
+import logging
+
+logging.basicConfig(level=logging.DEBUG, format="- %(filename)s - %(levelname)s - %(message)s")
 
 
 class LoginScreen:
@@ -65,6 +67,7 @@ class LoginScreen:
     def ir_para_cadastro(self):
         """Função chamada quando clica no botão entrar"""
         self.root.destroy() # Fecha a tela de login
+        from cadastro import CadastroScreen
         CadastroScreen() # Abre a tela de cadastro
         
     def on_login_click(self):
@@ -72,6 +75,7 @@ class LoginScreen:
         global username
         username = self.username_entry.get()
         password = self.password_entry.get()
+        logging.debug(f"username: {username} | senha digitada: {password}")
         
         if not username or not password:
             messagebox.showerror("Erro", "Preencha todos os campos!")

@@ -6,3 +6,8 @@ __pycache__/login.cpython-311.pyc
 
 # Ignorando o arquivo de variaveis de ambiente 
 .env
+
+# Ignorando os arquivos de banco de dados
+*.db
+*.sqbpro
+
